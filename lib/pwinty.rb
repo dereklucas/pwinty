@@ -21,6 +21,8 @@ module Pwinty
     headers "X-Pwinty-MerchantId" => ENV['PWINTY_MERCHANT_ID'],
     			  "X-Pwinty-REST-API-Key" => ENV['PWINTY_API_KEY']
 
+    get :get_orders, "/Orders"
+
     post :create_order, "/Orders" do |resource|
       resource.required :recipientName, :address1, :addressTownOrCity, 
                         :stateOrCounty, :postalOrZipCode, :country
@@ -31,7 +33,7 @@ module Pwinty
     end
 
     post :set_submission_status, "/Orders/Status" do |resource|
-      resource.required :status, :orderId
+      resource.required :status, :id
     end
 
     post :add_photo, "/Photos" do |resource|
