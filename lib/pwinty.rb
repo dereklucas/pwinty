@@ -16,10 +16,14 @@ module Pwinty
   end
 
   class Client < Weary::Client
-    domain "https://sandbox.pwinty.com"
+    domain "https://sandbox.pwinty.com/v2.1"
 
     headers "X-Pwinty-MerchantId" => ENV['PWINTY_MERCHANT_ID'],
     			  "X-Pwinty-REST-API-Key" => ENV['PWINTY_API_KEY']
+
+    get :catalog, "/Catalogue" do |resource|
+      resource.required :countryCode, :qualityLevel
+    end
 
     get :get_orders, "/Orders"
 
