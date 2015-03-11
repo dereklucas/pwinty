@@ -21,28 +21,35 @@ module Pwinty
     headers "X-Pwinty-MerchantId" => ENV['PWINTY_MERCHANT_ID'],
     			  "X-Pwinty-REST-API-Key" => ENV['PWINTY_API_KEY']
 
-    get :catalog, "/Catalogue" do |resource|
-      resource.required :countryCode, :qualityLevel
-    end
+    get :catalog, "/Catalogue/:countryCode/:qualityLevel"
 
-    get :get_orders, "/Orders"
-
+    # Orders
+    get  :get_orders,   "/Orders"
     post :create_order, "/Orders" do |resource|
       resource.required :recipientName, :address1, :addressTownOrCity, 
-                        :stateOrCounty, :postalOrZipCode, :country
+                        :stateOrCounty, :postalOrZipCode, :countryCode,
+                        :payment, :qualityLevel
+      resource.optional :useTrackedShipping, :destinationCountryCode, :address1
+    end
+    put :update_order, "/Orders/:id"
+
+    # Order Status
+    get  :get_order_status, "/Orders/:id/SubmissionStatus"
+    post :set_order_status, "/Orders/:id/Status" do |resource|
+      resource.required :status
     end
 
-    get :get_submission_status, "/Orders/SubmissionStatus" do |resource|
-      resource.required :id
-    end
-
-    post :set_submission_status, "/Orders/Status" do |resource|
-      resource.required :status, :id
-    end
-
-    post :add_photo, "/Photos" do |resource|
-      resource.required :orderId, :type, :copies, :sizing
+    # Order Photos
+    get  :get_photos, "/Orders/:orderId/Photos"
+    get  :get_photo,  "/Orders/:orderId/Photos/:photoId"
+    post :add_photo,  "/Orders/:orderId/Photos" do |resource|
+      resource.required :type, :copies, :sizing
       resource.optional :file, :url
     end
+    post :add_photos, "/Orders/:orderId/Photos/Batch"
+    delete :delete_photo, "/Orders/:orderId/Photos/:photoId"
+
+    # Countries
+    get :countries, "/Country"
   end
 end

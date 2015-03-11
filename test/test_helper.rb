@@ -1,6 +1,6 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'pwinty'
-require 'vcr'
+# require 'vcr'
 require 'json'
 
 #VCR.configure do |c|
