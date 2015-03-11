@@ -30,6 +30,7 @@ module Pwinty
                         :stateOrCounty, :postalOrZipCode, :countryCode,
                         :payment, :qualityLevel
       resource.optional :useTrackedShipping, :destinationCountryCode, :address1
+      resource.headers {'Content-Type' => 'multipart/form-data'}
     end
     put :update_order, "/Orders/:id"
 
