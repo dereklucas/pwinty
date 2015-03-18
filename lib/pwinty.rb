@@ -9,19 +9,21 @@ module Pwinty
   end
 
   class Client
-    domain = "https://sandbox.pwinty.com/v2.1" #: "https://sandbox.pwinty.com/v2.1"
-    pwinty = RestClient::Resource.new(domain, :headers => {
-      "X-Pwinty-MerchantId" => ENV['PWINTY_MERCHANT_ID'],
-      "X-Pwinty-REST-API-Key" => ENV['PWINTY_API_KEY']
-    })
+    def initialize
+      domain = "https://sandbox.pwinty.com/v2.1" #: "https://sandbox.pwinty.com/v2.1"
+      @pwinty = RestClient::Resource.new(domain, :headers => {
+        "X-Pwinty-MerchantId" => ENV['PWINTY_MERCHANT_ID'],
+        "X-Pwinty-REST-API-Key" => ENV['PWINTY_API_KEY']
+      })
+    end
 
     def catalog(countryCode, qualityLevel)
-      pwinty["/Catalogue/#{countryCode}/#{qualityLevel}"].get
+      @pwinty["/Catalogue/#{countryCode}/#{qualityLevel}"].get
     end
 
     # Orders
     def get_orders
-      pwinty["/Orders"]
+      @pwinty["/Orders"].get
     end
 
     def create_order(recipientName, address1, addressTownOrCity,
@@ -44,7 +46,7 @@ module Pwinty
       args[:destinationCountryCode] = destinationCountryCode if destinationCountryCode.present?
       args[:address2]               = address2               if address2.present?
 
-      pwinty["/Orders"].post args
+      @pwinty["/Orders"].post args
     end
 
     # def update_order(id, recipientName, address1, addressTownOrCity,
@@ -67,25 +69,25 @@ module Pwinty
     #   args[:destinationCountryCode] = destinationCountryCode if destinationCountryCode.present?
     #   args[:address2]               = address2               if address2.present?
 
-    #   pwinty["/Orders/#{id}"].put args
+    #   @pwinty["/Orders/#{id}"].put args
     # end
 
     # Order Status
     def get_order_status(id)
-      pwinty["/Orders/#{id}/SubmissionStatus"].get
+      @pwinty["/Orders/#{id}/SubmissionStatus"].get
     end
 
-    def update_order(id, status)
-      pwinty["/Orders/#{id}/Status"].post {status: status}
+    def update_order_status(id, status)
+      @pwinty["/Orders/#{id}/Status"].post status: status
     end
 
     # Order Photos
     def get_photos(orderId)
-      pwinty["/Orders/#{orderId}/Photos"].get
+      @pwinty["/Orders/#{orderId}/Photos"].get
     end
 
     def get_photo(orderId, photoId)
-      pwinty["/Orders/#{orderId}/Photos/#{photoId}"].get
+      @pwinty["/Orders/#{orderId}/Photos/#{photoId}"].get
     end
 
 
@@ -101,17 +103,17 @@ module Pwinty
       headers = {}
       headers["Content-Type"] = "multipart/form-data" if file.present?
 
-      pwinty["/Orders/#{orderId}/Photos"].post args, headers
+      @pwinty["/Orders/#{orderId}/Photos"].post args, headers
     end
 
     # post :add_photos, "/Orders/:orderId/Photos/Batch"
     def delete_photo(orderId, photoId)
-      pwinty["/Orders/#{orderId}/Photos/#{photoId}"].delete
+      @pwinty["/Orders/#{orderId}/Photos/#{photoId}"].delete
     end
 
     # Countries
     def countries
-      pwinty["/Country"].get
+      @pwinty["/Country"].get
     end
   end
 end
