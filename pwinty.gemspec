@@ -5,8 +5,8 @@ require "pwinty/version"
 Gem::Specification.new do |s|
   s.name        = "pwinty"
   s.version     = Pwinty::VERSION
-  s.authors     = ["Alan deLevie"]
-  s.email       = ["adelevie@gmail.com"]
+  s.authors     = ["Derek Lucas"]
+  s.email       = ["d@derekplucas.com"]
   s.homepage    = ""
   s.summary     = %q{A Ruby client for the Printy API}
   s.description = %q{Order photo prints with Ruby}
@@ -20,6 +20,5 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
-  s.add_runtime_dependency "weary"
-  s.add_runtime_dependency "active_attr"
+  s.add_runtime_dependency "rest-client"
 end
