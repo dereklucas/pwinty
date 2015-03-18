@@ -18,7 +18,7 @@ module Pwinty
       })
     end
 
-    def catalog(countryCode, qualityLevel)
+    def catalog(countryCode: 'US', qualityLevel: 'Standard')
       @pwinty["/Catalogue/#{countryCode}/#{qualityLevel}"].get
     end
 
@@ -27,51 +27,13 @@ module Pwinty
       @pwinty["/Orders"].get
     end
 
-    def create_order(recipientName, address1, addressTownOrCity,
-                     stateOrCounty, postalOrZipCode, countryCode,
-                     payment, qualityLevel, address2 = nil,
-                     useTrackedShipping = nil, destinationCountryCode = nil
-                    )
-      args = {
-        recipientName: recipientName,
-        address1: address1,
-        addressTownOrCity: addressTownOrCity, 
-        stateOrCounty: stateOrCounty,
-        postalOrZipCode: postalOrZipCode,
-        countryCode: countryCode,
-        payment: payment,
-        qualityLevel: qualityLevel
-      }
-
-      args[:useTrackedShipping]     = useTrackedShipping     if useTrackedShipping.present?
-      args[:destinationCountryCode] = destinationCountryCode if destinationCountryCode.present?
-      args[:address2]               = address2               if address2.present?
-
+    def create_order(**args)
       @pwinty["/Orders"].post args
     end
 
-    # def update_order(id, recipientName, address1, addressTownOrCity,
-    #                  stateOrCounty, postalOrZipCode, countryCode,
-    #                  payment, qualityLevel,
-    #                 payment, qualityLevel, address2 = nil,
-    #                 useTrackedShipping = nil, destinationCountryCode = nil
-    #   args = {
-    #     recipientName: recipientName,
-    #     address1: address1,
-    #     addressTownOrCity: addressTownOrCity, 
-    #     stateOrCounty: stateOrCounty,
-    #     postalOrZipCode: postalOrZipCode,
-    #     countryCode: countryCode,
-    #     payment: payment,
-    #     qualityLevel: qualityLevel
-    #   }
-
-    #   args[:useTrackedShipping]     = useTrackedShipping     if useTrackedShipping.present?
-    #   args[:destinationCountryCode] = destinationCountryCode if destinationCountryCode.present?
-    #   args[:address2]               = address2               if address2.present?
-
-    #   @pwinty["/Orders/#{id}"].put args
-    # end
+    def update_order(**args)
+      @pwinty["/Orders/#{id}"].put args
+    end
 
     # Order Status
     def get_order_status(id)
@@ -92,17 +54,9 @@ module Pwinty
     end
 
 
-    def add_photo(orderId, type, copies, sizing, file = nil, url = nil)
-      args = {
-        type: type,
-        copies: copies,
-        sizing: sizing
-      }
-      args[:file] = file if file.present?
-      args[:url]  = url  if url.present?
-
+    def add_photo(**args)
       headers = {}
-      headers["Content-Type"] = "multipart/form-data" if file.present?
+      headers["Content-Type"] = "multipart/form-data" if args[:file].present?
 
       @pwinty["/Orders/#{orderId}/Photos"].post args, headers
     end
