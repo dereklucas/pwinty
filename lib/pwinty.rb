@@ -32,7 +32,7 @@ module Pwinty
     end
 
     def update_order(**args)
-      @pwinty["/Orders/#{id}"].put args
+      @pwinty["/Orders/#{args[:id]}"].put args
     end
 
     # Order Status
@@ -58,7 +58,7 @@ module Pwinty
       headers = {}
       headers["Content-Type"] = "multipart/form-data" if args[:file].present?
 
-      @pwinty["/Orders/#{orderId}/Photos"].post args, headers
+      @pwinty["/Orders/#{args[:orderId]}/Photos"].post args, headers
     end
 
     # post :add_photos, "/Orders/:orderId/Photos/Batch"
