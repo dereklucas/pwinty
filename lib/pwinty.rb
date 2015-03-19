@@ -58,13 +58,14 @@ module Pwinty
 
     def add_photo(**args)
       headers = {}
+      orderId = args.delete(:orderId)
 
       unless args[:asset].nil?
         headers = {"Content-Type" => "multipart/form-data, boundary=#{BOUNDARY}"}
         args = build_upload(args)
       end
 
-      @pwinty["/Orders/#{args[:orderId]}/Photos"].post args
+      @pwinty["/Orders/#{orderId}/Photos"].post args
     end
 
     # post :add_photos, "/Orders/:orderId/Photos/Batch"
