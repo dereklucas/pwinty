@@ -1,6 +1,8 @@
 require "pwinty/version"
 require 'rest_client'
 
+BOUNDARY = "AaB03x"
+
 module Pwinty
 
   def self.client
@@ -56,9 +58,13 @@ module Pwinty
 
     def add_photo(**args)
       headers = {}
-      headers["Content-Type"] = "multipart/form-data" if args[:file].present?
 
-      @pwinty["/Orders/#{args[:orderId]}/Photos"].post args, headers
+      unless args[:asset].nil?
+        headers = {"Content-Type" => "multipart/form-data, boundary=#{BOUNDARY}"}
+        args = build_upload(args)
+      end
+
+      @pwinty["/Orders/#{args[:orderId]}/Photos"].post args
     end
 
     # post :add_photos, "/Orders/:orderId/Photos/Batch"
@@ -69,6 +75,31 @@ module Pwinty
     # Countries
     def countries
       @pwinty["/Country"].get
+    end
+
+    private
+
+    def build_upload(args)
+      # We're going to compile all the parts of the body into an array, then join them into one single string
+      # This method reads the given file into memory all at once, thus it might not work well for large files
+      post_body = []
+
+      asset = args.delete(:asset)
+      args.each do |key, value|
+        post_body << "--#{BOUNDARY}\r\n"
+        post_body << "Content-Disposition: form-data; name=\"key\"\r\n\r\n"
+        post_body << value
+      end
+
+      # Add the file Data
+      post_body << "--#{BOUNDARY}\r\n"
+      post_body << "Content-Disposition: form-data; name=\"file\"; filename=\"#{asset.original_filename}\"\r\n"
+      post_body << "Content-Type: #{MIME::Types.type_for(asset.original_filename)}\r\n\r\n"
+      post_body << asset.file_for(:pristine).read
+
+      post_body << "\r\n\r\n--#{BOUNDARY}--\r\n"
+
+      return post_body.join
     end
   end
 end
