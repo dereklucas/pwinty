@@ -21,38 +21,38 @@ module Pwinty
     end
 
     def catalog(countryCode: 'US', qualityLevel: 'Standard')
-      @pwinty["/Catalogue/#{countryCode}/#{qualityLevel}"].get
+      JSON.parse @pwinty["/Catalogue/#{countryCode}/#{qualityLevel}"].get
     end
 
     # Orders
     def get_orders
-      @pwinty["/Orders"].get
+      JSON.parse @pwinty["/Orders"].get
     end
 
     def create_order(**args)
-      @pwinty["/Orders"].post args
+      JSON.parse @pwinty["/Orders"].post(args)
     end
 
     def update_order(**args)
-      @pwinty["/Orders/#{args[:id]}"].put args
+      JSON.parse @pwinty["/Orders/#{args[:id]}"].put(args)
     end
 
     # Order Status
     def get_order_status(id)
-      @pwinty["/Orders/#{id}/SubmissionStatus"].get
+      JSON.parse @pwinty["/Orders/#{id}/SubmissionStatus"].get
     end
 
     def update_order_status(id, status)
-      @pwinty["/Orders/#{id}/Status"].post status: status
+      JSON.parse @pwinty["/Orders/#{id}/Status"].post(status: status)
     end
 
     # Order Photos
     def get_photos(orderId)
-      @pwinty["/Orders/#{orderId}/Photos"].get
+      JSON.parse @pwinty["/Orders/#{orderId}/Photos"].get
     end
 
     def get_photo(orderId, photoId)
-      @pwinty["/Orders/#{orderId}/Photos/#{photoId}"].get
+      JSON.parse @pwinty["/Orders/#{orderId}/Photos/#{photoId}"].get
     end
 
 
@@ -65,17 +65,17 @@ module Pwinty
         args = build_upload(args)
       end
 
-      @pwinty["/Orders/#{orderId}/Photos"].post args
+      JSON.parse @pwinty["/Orders/#{orderId}/Photos"].post(args)
     end
 
     # post :add_photos, "/Orders/:orderId/Photos/Batch"
     def delete_photo(orderId, photoId)
-      @pwinty["/Orders/#{orderId}/Photos/#{photoId}"].delete
+      JSON.parse @pwinty["/Orders/#{orderId}/Photos/#{photoId}"].delete
     end
 
     # Countries
     def countries
-      @pwinty["/Country"].get
+      JSON.parse @pwinty["/Country"].get
     end
 
     private
@@ -86,6 +86,7 @@ module Pwinty
       post_body = []
 
       asset = args.delete(:asset)
+      asset_filename = args.delete(:asset_filename)
       args.each do |key, value|
         post_body << "--#{BOUNDARY}\r\n"
         post_body << "Content-Disposition: form-data; name=\"key\"\r\n\r\n"
@@ -94,9 +95,9 @@ module Pwinty
 
       # Add the file Data
       post_body << "--#{BOUNDARY}\r\n"
-      post_body << "Content-Disposition: form-data; name=\"file\"; filename=\"#{asset.original_filename}\"\r\n"
-      post_body << "Content-Type: #{MIME::Types.type_for(asset.original_filename)}\r\n\r\n"
-      post_body << asset.file_for(:pristine).read
+      post_body << "Content-Disposition: form-data; name=\"file\"; filename=\"#{asset_filename}\"\r\n"
+      post_body << "Content-Type: #{MIME::Types.type_for(asset_filename)}\r\n\r\n"
+      post_body << File.read(asset)
 
       post_body << "\r\n\r\n--#{BOUNDARY}--\r\n"
 
