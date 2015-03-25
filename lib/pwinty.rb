@@ -12,7 +12,9 @@ module Pwinty
 
   class Client
     def initialize
-      domain = "https://sandbox.pwinty.com/v2.1" #: "https://sandbox.pwinty.com/v2.1"
+      subdomain = ENV['PWINTY_PRODUCTION'] ? "api" : "sandbox"
+      domain = "https://#{subdomain}.pwinty.com/v2.1"
+
       @pwinty = RestClient::Resource.new(domain, :headers => {
         "X-Pwinty-MerchantId" => ENV['PWINTY_MERCHANT_ID'],
         "X-Pwinty-REST-API-Key" => ENV['PWINTY_API_KEY'],
