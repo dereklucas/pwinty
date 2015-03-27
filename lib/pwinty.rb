@@ -12,7 +12,7 @@ module Pwinty
 
   class Client
     def initialize
-      subdomain = ENV['PWINTY_PRODUCTION'] ? "api" : "sandbox"
+      subdomain = ENV['PWINTY_PRODUCTION'] == 'true' ? "api" : "sandbox"
       domain = "https://#{subdomain}.pwinty.com/v2.1"
 
       @pwinty = RestClient::Resource.new(domain, :headers => {
