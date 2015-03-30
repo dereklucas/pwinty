@@ -62,7 +62,6 @@ module Pwinty
       orderId = args.delete(:orderId)
 
       unless args[:file].nil?
-        args[:file] = File.new(args[:file], 'rb')
         args, headers = Multipart::Post.prepare_query(args)
       end
 
