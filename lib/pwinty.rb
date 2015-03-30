@@ -1,7 +1,6 @@
 require "pwinty/version"
-require 'rest_client'
-
-BOUNDARY = "AaB03x"
+require "multipart"
+require "rest_client"
 
 module Pwinty
 
@@ -62,12 +61,12 @@ module Pwinty
       headers = {}
       orderId = args.delete(:orderId)
 
-      unless args[:asset].nil?
-        headers = {"Content-Type" => "multipart/form-data, boundary=#{BOUNDARY}"}
-        args = build_upload(args)
+      unless args[:file].nil?
+        args[:file] = File.new(args[:file], 'rb')
+        args, headers = Multipart::Post.prepare_query(args)
       end
 
-      JSON.parse @pwinty["/Orders/#{orderId}/Photos"].post(args)
+      JSON.parse @pwinty["/Orders/#{orderId}/Photos"].post(args, headers)
     end
 
     # post :add_photos, "/Orders/:orderId/Photos/Batch"
@@ -78,32 +77,6 @@ module Pwinty
     # Countries
     def countries
       JSON.parse @pwinty["/Country"].get
-    end
-
-    private
-
-    def build_upload(args)
-      # We're going to compile all the parts of the body into an array, then join them into one single string
-      # This method reads the given file into memory all at once, thus it might not work well for large files
-      post_body = []
-
-      asset = args.delete(:asset)
-      asset_filename = args.delete(:asset_filename)
-      args.each do |key, value|
-        post_body << "--#{BOUNDARY}\r\n"
-        post_body << "Content-Disposition: form-data; name=\"key\"\r\n\r\n"
-        post_body << value
-      end
-
-      # Add the file Data
-      post_body << "--#{BOUNDARY}\r\n"
-      post_body << "Content-Disposition: form-data; name=\"file\"; filename=\"#{asset_filename}\"\r\n"
-      post_body << "Content-Type: #{MIME::Types.type_for(asset_filename)}\r\n\r\n"
-      post_body << File.read(asset)
-
-      post_body << "\r\n\r\n--#{BOUNDARY}--\r\n"
-
-      return post_body.join
     end
   end
 end
