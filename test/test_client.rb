@@ -63,7 +63,7 @@ class TestClient < Test::Unit::TestCase
     id = body["id"]
 
 
-    body = @client.update_order(id: id, postalOrZipCode: '94102')
+    body = @client.update_order(id: id, recipientName: 'Travis CI', postalOrZipCode: '94102')
     assert_equal body.keys.sort!, @order_keys.sort!
     assert_equal body["postalOrZipCode"], "94102"
 
@@ -96,6 +96,8 @@ class TestClient < Test::Unit::TestCase
     # Delete photo
     body = @client.delete_photo(id, photo_id)
     assert_equal body['errorMessage'], nil
+
+    # TODO: Need to add a photo via file
 
     # get Order Status
     body = @client.get_order_status(id)
