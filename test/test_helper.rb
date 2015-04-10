@@ -1,9 +1,5 @@
-require 'minitest/autorun'
-require 'pwinty'
-# require 'vcr'
-require 'json'
+require 'dotenv'
+Dotenv.load
 
-#VCR.configure do |c|
-#  c.cassette_library_dir = 'fixtures/vcr_cassettes'
-#  c.hook_into :webmock
-#end
+require 'test-unit'
+require 'pwinty'

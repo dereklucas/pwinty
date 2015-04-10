@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Derek Lucas"]
   s.email       = ["d@derekplucas.com"]
   s.homepage    = ""
-  s.summary     = %q{A Ruby client for the Printy API}
+  s.summary     = %q{A Ruby client for the Pwinty API}
   s.description = %q{Order photo prints with Ruby}
 
   s.rubyforge_project = "pwinty"
@@ -18,7 +18,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  # specify any dependencies here; for example:
-  # s.add_development_dependency "rspec"
+  s.add_development_dependency "rake"
+  s.add_development_dependency "test-unit"
+  s.add_development_dependency "dotenv"
   s.add_runtime_dependency "rest-client", '~> 1.8'
 end
