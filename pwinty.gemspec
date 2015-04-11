@@ -7,11 +7,10 @@ Gem::Specification.new do |s|
   s.version     = Pwinty::VERSION
   s.authors     = ["Derek Lucas"]
   s.email       = ["d@derekplucas.com"]
-  s.homepage    = ""
+  s.homepage    = "http://derekplucas.com"
+  s.licenses    = ['MIT']
   s.summary     = %q{A Ruby client for the Pwinty API}
   s.description = %q{Order photo prints with Ruby}
-
-  s.rubyforge_project = "pwinty"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

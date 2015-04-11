@@ -73,6 +73,11 @@ Supported Ruby versions
 
 The Ruby Pwinty gem has only been tested on Ruby 2.
 
+License
+-------
+
+MIT License
+
 More Information
 ----------------
 
