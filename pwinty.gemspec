@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Pwinty::VERSION
   s.authors     = ["Derek Lucas"]
   s.email       = ["d@derekplucas.com"]
-  s.homepage    = "http://derekplucas.com"
+  s.homepage    = "http://github.com/dereklucas/pwinty"
   s.licenses    = ['MIT']
   s.summary     = %q{A Ruby client for the Pwinty API}
   s.description = %q{Order photo prints with Ruby}
