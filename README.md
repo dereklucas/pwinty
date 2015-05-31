@@ -2,6 +2,8 @@
 
 This library implements a Ruby client for the [Pwinty photo printing API](http://www.pwinty.com/Api).
 
+While I consider this to be feature complete (it's the only Ruby Pwinty client that can `POST` photos as well as send photo URLs), I do want to hear if there are issues.
+
 Documentation
 -------------
 
@@ -83,3 +85,4 @@ More Information
 
 * [Rubygems](https://rubygems.org/gems/pwinty)
 * [Issues](https://github.com/dereklucas/pwinty/issues)
+* Follows [SemVer](http://semver.org)
