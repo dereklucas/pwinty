@@ -4,19 +4,20 @@ require "rest_client"
 
 module Pwinty
 
-  def self.client
-    @@client ||= Pwinty::Client.new
+  def self.client(args={})
+    @@client ||= Pwinty::Client.new(args)
     @@client
   end
 
   class Client
-    def initialize
-      subdomain = ENV['PWINTY_PRODUCTION'] == 'true' ? "api" : "sandbox"
+    def initialize(args={})
+      options = { merchant_id: ENV['PWINTY_MERCHANT_ID'], api_key: ENV['PWINTY_API_KEY'], production: ENV['PWINTY_PRODUCTION'] == 'true' }.merge(args)
+      subdomain = options[:production] == true ? "api" : "sandbox"
       domain = "https://#{subdomain}.pwinty.com/v2.1"
 
       @pwinty = RestClient::Resource.new(domain, :headers => {
-        "X-Pwinty-MerchantId" => ENV['PWINTY_MERCHANT_ID'],
-        "X-Pwinty-REST-API-Key" => ENV['PWINTY_API_KEY'],
+        "X-Pwinty-MerchantId" => options[:merchant_id],
+        "X-Pwinty-REST-API-Key" => options[:api_key],
         'Accept' => 'application/json'
       })
     end
