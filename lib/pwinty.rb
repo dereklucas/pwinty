@@ -13,7 +13,8 @@ module Pwinty
     def initialize(args={})
       options = { merchant_id: ENV['PWINTY_MERCHANT_ID'], api_key: ENV['PWINTY_API_KEY'], production: ENV['PWINTY_PRODUCTION'] == 'true' }.merge(args)
       subdomain = options[:production] == true ? "api" : "sandbox"
-      domain = "https://#{subdomain}.pwinty.com/v2.1"
+      apiVersion = options[:api_version] || 'v2.1'
+      domain = "https://#{subdomain}.pwinty.com/#{apiVersion}"
 
       @pwinty = RestClient::Resource.new(domain, :headers => {
         "X-Pwinty-MerchantId" => options[:merchant_id],
