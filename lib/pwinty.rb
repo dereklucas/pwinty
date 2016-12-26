@@ -4,19 +4,22 @@ require "rest_client"
 
 module Pwinty
 
-  def self.client
-    @@client ||= Pwinty::Client.new
+  def self.client(args={})
+    @@client ||= Pwinty::Client.new(args)
     @@client
   end
 
   class Client
-    def initialize
-      subdomain = ENV['PWINTY_PRODUCTION'] == 'true' ? "api" : "sandbox"
-      domain = "https://#{subdomain}.pwinty.com/v2.1"
+    attr_accessor :pwinty
+    def initialize(args={})
+      options = { merchant_id: ENV['PWINTY_MERCHANT_ID'], api_key: ENV['PWINTY_API_KEY'], production: ENV['PWINTY_PRODUCTION'] == 'true' }.merge(args)
+      subdomain = options[:production] == true ? "api" : "sandbox"
+      apiVersion = options[:api_version] || 'v2.1'
+      domain = "https://#{subdomain}.pwinty.com/#{apiVersion}"
 
       @pwinty = RestClient::Resource.new(domain, :headers => {
-        "X-Pwinty-MerchantId" => ENV['PWINTY_MERCHANT_ID'],
-        "X-Pwinty-REST-API-Key" => ENV['PWINTY_API_KEY'],
+        "X-Pwinty-MerchantId" => options[:merchant_id],
+        "X-Pwinty-REST-API-Key" => options[:api_key],
         'Accept' => 'application/json'
       })
     end
@@ -68,7 +71,11 @@ module Pwinty
       JSON.parse @pwinty["/Orders/#{orderId}/Photos"].post(args, headers)
     end
 
-    # post :add_photos, "/Orders/:orderId/Photos/Batch"
+    def add_photos(orderId, photos)
+      body = photos.is_a?(String) ? photos : photos.to_json
+      JSON.parse @pwinty["/Orders/#{orderId}/Photos/Batch"].post(body, {'Content-Type' => 'application/json'} )
+    end
+
     def delete_photo(orderId, photoId)
       JSON.parse @pwinty["/Orders/#{orderId}/Photos/#{photoId}"].delete
     end

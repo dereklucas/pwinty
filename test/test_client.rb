@@ -14,7 +14,7 @@ class TestClient < Test::Unit::TestCase
       qualityLevel: "Standard"
     }
 
-    @client = Pwinty.client
+    @client = Pwinty.client(merchant_id: ENV['PWINTY_MERCHANT_ID'], api_key: ENV['PWINTY_API_KEY'], production: false)
 
     @order_keys = %w[ id status price
                       address1 address2
@@ -42,6 +42,7 @@ class TestClient < Test::Unit::TestCase
     assert_equal body["items"].class, Array
   end
   def test_get_orders_integration
+    # NOTE: works only if you already have an order created. the first ever test run will probably fail
     body = @client.get_orders
     assert_equal body.class, Array
     assert_equal body.first.keys.sort!, @order_keys.sort!
