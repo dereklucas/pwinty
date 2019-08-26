@@ -1,4 +1,7 @@
-# Pwinty [![Build Status](https://secure.travis-ci.org/dereklucas/pwinty.png)](http://travis-ci.org/dereklucas/pwinty?branch=master) [![Dependency Status](https://gemnasium.com/dereklucas/pwinty.png)](https://gemnasium.com/dereklucas/pwinty)
+# DEPRECATED: Migrate to [API v3](https://github.com/tomharvey/pwinty3-rb)
+
+
+# Pwinty v2 [![Build Status](https://secure.travis-ci.org/dereklucas/pwinty.png)](http://travis-ci.org/dereklucas/pwinty?branch=master)
 
 This library implements a Ruby client for the [Pwinty photo printing API](http://www.pwinty.com/Api).
 
